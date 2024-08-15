@@ -13,7 +13,9 @@ import 'package:unit_test_flutter/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const MyApp(
+      items: [],
+    ));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
@@ -67,5 +69,25 @@ void main() {
 
     // Search for the childWidget in the tree and verify it exists.
     expect(find.byWidget(childWidget), findsOneWidget);
+  });
+
+  testWidgets('finds a deep item in a long list', (tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(MyApp(
+      items: List<String>.generate(10000, (i) => 'Item $i'),
+    ));
+
+    final listFinder = find.byType(Scrollable);
+    final itemFinder = find.byKey(const ValueKey('item_50_text'));
+
+    // Scroll until the item to be found appears.
+    await tester.scrollUntilVisible(
+      itemFinder,
+      500.0,
+      scrollable: listFinder,
+    );
+
+    // Verify that the item contains the correct text.
+    expect(itemFinder, findsOneWidget);
   });
 }

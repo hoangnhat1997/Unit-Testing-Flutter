@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp(
+    items: List<String>.generate(10000, (i) => 'Item $i'),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required List<String> items});
 
   // This widget is the root of your application.
   @override
